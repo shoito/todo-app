@@ -1,0 +1,7 @@
+{
+  "ShowFunction": {
+    "DEFAULT_REGION": "ap-northeast-1",
+    "DYNAMODB_ENDPOINT": "https://dynamodb.ap-northeast-1.amazonaws.com/",
+    "TABLE_NAME": "dev_todos"
+  }
+}

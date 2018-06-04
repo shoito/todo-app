@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  SAM Template for TODO App
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - prod
+      - stag
+      - dev
+  DynamoDBEndpoint:
+    Type: String
+    Default: !Sub https://dynamodb.${AWS::Region}.amazonaws.com/
+  TableName:
+    Type: String
+    Default: todos
+Globals:
+  Function:
+    Timeout: 15
+    Runtime: python3.6
+    MemorySize: 256
+    Environment:
+      Variables:
+        DEFAULT_REGION: !Ref AWS::Region
+        TABLE_NAME: !Ref TodosTable
+        DYNAMODB_ENDPOINT: !Ref DynamoDBEndpoint
+Resources:
+  ShowFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${Stage}-get-todos
+      CodeUri: ./
+      Handler: todos.show.lambda_handler
+      Policies: AmazonDynamoDBReadOnlyAccess
+      Events:
+          Api:
+            Type: Api
+            Properties:
+              Path: /todos/{id}
+              Method: GET
+  TodosTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: !Sub ${Stage}_${TableName}
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: title
+          AttributeType: S
+        - AttributeName: contents
+          AttributeType: S
+        - AttributeName: deadline
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+Outputs:
+  ApiEndpoint:
+    Value: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}
