@@ -27,6 +27,19 @@ Globals:
         TABLE_NAME: !Ref TodosTable
         DYNAMODB_ENDPOINT: !Ref DynamoDBEndpoint
 Resources:
+  ListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${Stage}-list-todos
+      CodeUri: ./
+      Handler: todos.list.lambda_handler
+      Policies: AmazonDynamoDBReadOnlyAccess
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /todos
+            Method: GET
   ShowFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -35,11 +48,11 @@ Resources:
       Handler: todos.show.lambda_handler
       Policies: AmazonDynamoDBReadOnlyAccess
       Events:
-          Api:
-            Type: Api
-            Properties:
-              Path: /todos/{id}
-              Method: GET
+        Api:
+          Type: Api
+          Properties:
+            Path: /todos/{id}
+            Method: GET
   TodosTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
