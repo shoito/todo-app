@@ -37,6 +37,7 @@ jobs:
       - run:
           name: run tests
           environment:
+            DEFAULT_REGION: ap-northeast-1
             DYNAMODB_ENDPOINT: http://localstack:4569
             TABLE_NAME: ut_todos
             LOCALSTACK_HOST: localstack
