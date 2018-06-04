@@ -1,0 +1,49 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+references:
+  unit_test_container: &unit_test_container
+    docker:
+      - image: circleci/python:3.6.1
+      - name: localstack
+        image: localstack/localstack
+    working_directory: ~/repo
+
+jobs:
+  build:
+    <<: *unit_test_container
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements-dev.txt" }}
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements-dev.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements-dev.txt" }}
+
+      - run:
+          name: run tests
+          environment:
+            DYNAMODB_ENDPOINT: http://localstack:4569
+            TABLE_NAME: ut_todos
+            LOCALSTACK_HOST: localstack
+          command: |
+            . venv/bin/activate
+            python -m pytest tests/ -v
+
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
