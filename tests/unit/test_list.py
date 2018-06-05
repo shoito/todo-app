@@ -54,7 +54,7 @@ def test_todo_list_not_empty(event_todo_list):
             'id': '1',
             'title': 'test',
             'descr': 'test',
-            'deadline': '2018-06-30',
+            'deadline': '2018-06-30T10:00:00Z',
             'status': 'TODO'
         }
     )
@@ -63,7 +63,7 @@ def test_todo_list_not_empty(event_todo_list):
             'id': '2',
             'title': 'test',
             'descr': 'test',
-            'deadline': '2018-07-30',
+            'deadline': '2018-07-30T10:00:00Z',
             'status': 'DOING'
         }
     )
