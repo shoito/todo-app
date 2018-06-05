@@ -53,6 +53,19 @@ Resources:
           Properties:
             Path: /todos/{id}
             Method: GET
+  CreateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${Stage}-create-todos
+      CodeUri: ./
+      Handler: todos.create.lambda_handler
+      Policies: AmazonDynamoDBFullAccess
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /todos
+            Method: POST
   TodosTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
