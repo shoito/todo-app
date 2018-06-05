@@ -30,25 +30,6 @@ def setup():
                 'WriteCapacityUnits': 1
             }
         )
-
-        table(TABLE_NAME).put_item(
-            Item={
-                'id': '1',
-                'title': 'test',
-                'descr': 'test',
-                'deadline': '2018-06-30',
-                'status': 'TODO'
-            }
-        )
-        table(TABLE_NAME).put_item(
-            Item={
-                'id': '2',
-                'title': 'test',
-                'descr': 'test',
-                'deadline': '2018-07-30',
-                'status': 'DOING'
-            }
-        )
     except ClientError:
         pass
 
@@ -67,9 +48,36 @@ def event_todo_list():
     }
 
 
-def test_todo_list(event_todo_list):
+def test_todo_list_not_empty(event_todo_list):
+    table(TABLE_NAME).put_item(
+        Item={
+            'id': '1',
+            'title': 'test',
+            'descr': 'test',
+            'deadline': '2018-06-30',
+            'status': 'TODO'
+        }
+    )
+    table(TABLE_NAME).put_item(
+        Item={
+            'id': '2',
+            'title': 'test',
+            'descr': 'test',
+            'deadline': '2018-07-30',
+            'status': 'DOING'
+        }
+    )
+
     ret = list.lambda_handler(event_todo_list, '')
     assert ret['statusCode'] == 200
 
     data = json.loads(ret['body'])
     assert len(data) == 2
+
+
+def test_todo_list_empty(event_todo_list):
+    ret = list.lambda_handler(event_todo_list, '')
+    assert ret['statusCode'] == 200
+
+    data = json.loads(ret['body'])
+    assert len(data) == 0
