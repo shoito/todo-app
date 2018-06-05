@@ -27,7 +27,7 @@ def lambda_handler(event, context):
                 'title': req.get('title'),
                 'description': req.get('description', ''),
                 'deadline': req.get('deadline', ''),
-                'status': 'TODO'
+                'todo_status': 'TODO'
             }
         )
     except:

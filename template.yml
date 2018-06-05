@@ -66,6 +66,19 @@ Resources:
           Properties:
             Path: /todos
             Method: POST
+  UpdateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${Stage}-update-todos
+      CodeUri: ./
+      Handler: todos.update.lambda_handler
+      Policies: AmazonDynamoDBFullAccess
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /todos/{id}
+            Method: PUT
   TodosTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
@@ -83,7 +96,7 @@ Resources:
           AttributeType: S
         - AttributeName: deadline
           AttributeType: S
-        - AttributeName: status
+        - AttributeName: todo_status
           AttributeType: S
       KeySchema:
         - AttributeName: id
