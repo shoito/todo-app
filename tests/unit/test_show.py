@@ -36,7 +36,7 @@ def setup():
                 'id': '1',
                 'title': 'test',
                 'descr': 'test',
-                'deadline': '2018-06-30T10:00:00Z',
+                'due_date': '2018-06-30T10:00:00Z',
                 'todo_status': 'TODO'
             }
         )

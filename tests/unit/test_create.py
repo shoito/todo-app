@@ -47,7 +47,7 @@ def event_todo_valid():
         'body': json.dumps({
             'title': 'test title',
             'description': 'test description',
-            'deadline': '2018-06-30T10:00:00Z',
+            'due_date': '2018-06-30T10:00:00Z',
         }),
         'httpMethod': 'POST',
     }
@@ -67,7 +67,7 @@ def event_todo_title_missing():
         'body': json.dumps({
             # 'title': 'test title', # missing title
             'description': 'test description',
-            'deadline': '2018-06-30T10:00:00Z',
+            'due_date': '2018-06-30T10:00:00Z',
         }),
         'httpMethod': 'POST',
     }
@@ -84,7 +84,7 @@ def event_todo_title_empty():
         'body': json.dumps({
             'title': '',
             'description': 'test description',
-            'deadline': '2018-06-30T10:00:00Z',
+            'due_date': '2018-06-30T10:00:00Z',
         }),
         'httpMethod': 'POST',
     }
@@ -101,7 +101,7 @@ def event_todo_description_missing():
         'body': json.dumps({
             'title': 'test title',
             # 'description': 'test description', # missing description
-            'deadline': '2018-06-30T10:00:00Z',
+            'due_date': '2018-06-30T10:00:00Z',
         }),
         'httpMethod': 'POST',
     }
@@ -113,17 +113,17 @@ def test_todo_description_missing(event_todo_description_missing):
 
 
 @pytest.fixture()
-def event_todo_deadline_missing():
+def event_todo_due_date_missing():
     return {
         'body': json.dumps({
             'title': 'test title',
             'description': 'test description',
-            'deadline': '2018-06-30-10T00:00Z', # invalid format
+            'due_date': '2018-06-30-10T00:00Z', # invalid format
         }),
         'httpMethod': 'POST',
     }
 
 
-def test_todo_deadline_missing(event_todo_deadline_missing):
-    res = create.lambda_handler(event_todo_deadline_missing, '')
+def test_todo_due_date_missing(event_todo_due_date_missing):
+    res = create.lambda_handler(event_todo_due_date_missing, '')
     assert res['statusCode'] == 400

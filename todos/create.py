@@ -26,7 +26,7 @@ def lambda_handler(event, context):
                 'id': '1',
                 'title': req.get('title'),
                 'description': req.get('description', ''),
-                'deadline': req.get('deadline', ''),
+                'due_date': req.get('due_date', ''),
                 'todo_status': 'TODO'
             }
         )
@@ -41,9 +41,9 @@ def lambda_handler(event, context):
 def validate(req):
     if not req.get('title'):
         return False
-    if req.get('deadline'):
+    if req.get('due_date'):
         try:
-            dateutil.parser.parse(req.get('deadline'))
+            dateutil.parser.parse(req.get('due_date'))
         except ValueError:
             return False
 

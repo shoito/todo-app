@@ -26,11 +26,11 @@ def lambda_handler(event, context):
             Key={
                 'id': event['pathParameters']['id']
             },
-            UpdateExpression='set title=:title, description=:description, deadline=:deadline, todo_status=:todo_status',
+            UpdateExpression='set title=:title, description=:description, due_date=:due_date, todo_status=:todo_status',
             ExpressionAttributeValues={
                 ':title': req.get('title'),
                 ':description': req.get('description'),
-                ':deadline': req.get('deadline'),
+                ':due_date': req.get('due_date'),
                 ':todo_status': req.get('todo_status')
             }
         )
@@ -45,13 +45,13 @@ def lambda_handler(event, context):
 def validate(req):
     if (not req.get('title')
             or not req.get('description')
-            or not req.get('deadline')
+            or not req.get('due_date')
             or not req.get('todo_status')):
         return False
 
-    if req.get('deadline'):
+    if req.get('due_date'):
         try:
-            dateutil.parser.parse(req.get('deadline'))
+            dateutil.parser.parse(req.get('due_date'))
         except ValueError:
             return False
     if (not req.get('todo_status')

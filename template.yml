@@ -94,7 +94,7 @@ Resources:
           AttributeType: S
         - AttributeName: contents
           AttributeType: S
-        - AttributeName: deadline
+        - AttributeName: due_date
           AttributeType: S
         - AttributeName: todo_status
           AttributeType: S
