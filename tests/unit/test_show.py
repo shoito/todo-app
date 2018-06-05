@@ -37,7 +37,7 @@ def setup():
                 'title': 'test',
                 'descr': 'test',
                 'deadline': '2018-06-30T10:00:00Z',
-                'status': 'TODO'
+                'todo_status': 'TODO'
             }
         )
     except ClientError:
