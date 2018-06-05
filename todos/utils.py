@@ -1,19 +1,16 @@
 import boto3
 import json
-import logging
 import os
 import sys
-
-logger = logging.getLogger()
 
 DEFAULT_REGION = os.getenv('DEFAULT_REGION', None) # ap-northeast-1
 DYNAMODB_ENDPOINT = os.getenv('DYNAMODB_ENDPOINT', None) # https://dynamodb.ap-northeast-1.amazonaws.com/
 
 if DEFAULT_REGION is None:
-    logger.critical('Could not find DEFAULT_REGION env.')
+    print('Could not find DEFAULT_REGION env.')
     sys.exit(1)
 if DYNAMODB_ENDPOINT is None:
-    logger.critical('Could not find DYNAMODB_ENDPOINT env.')
+    print('Could not find DYNAMODB_ENDPOINT env.')
     sys.exit(1)
 
 
