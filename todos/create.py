@@ -3,6 +3,7 @@ import json
 import logging
 import os
 
+from botocore.exceptions import ClientError
 from todos.utils import respond, table
 
 logger = logging.getLogger()
@@ -23,17 +24,23 @@ def lambda_handler(event, context):
 
         res = table(TABLE_NAME).put_item(
             Item={
-                'id': '1',
+                'id': '1', # TODO incr
                 'title': req.get('title'),
                 'description': req.get('description', ''),
                 'due_date': req.get('due_date', ''),
                 'todo_status': 'TODO'
+            },
+            Expected={
+                'primary_key': {
+                    'Exists': False
+                }
             }
         )
-    except:
-        import traceback
-        traceback.print_exc()
-        return respond({'code': 400, 'message': 'Failed to create the todo.'})
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+            return respond({'code': 409, 'message': 'Failed to create the todo.'})
+        else:
+            return respond({'code': 400, 'message': 'Failed to create the todo.'})
 
     return respond(None, res)
 
