@@ -79,6 +79,19 @@ Resources:
           Properties:
             Path: /todos/{id}
             Method: PUT
+  DeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${Stage}-delete-todos
+      CodeUri: ./
+      Handler: todos.delete.lambda_handler
+      Policies: AmazonDynamoDBFullAccess
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /todos/{id}
+            Method: DELETE
   TodosTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
