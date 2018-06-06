@@ -2,8 +2,10 @@ import dateutil.parser
 import json
 import logging
 import os
+import uuid
 
 from botocore.exceptions import ClientError
+from todos.todo_status import TodoStatus
 from todos.utils import respond, table
 
 logger = logging.getLogger()
@@ -24,11 +26,11 @@ def lambda_handler(event, context):
 
         res = table(TABLE_NAME).put_item(
             Item={
-                'id': '1', # TODO incr
+                'id': str(uuid.uuid4().hex[:8]),
                 'title': req.get('title'),
                 'description': req.get('description', ''),
                 'due_date': req.get('due_date', ''),
-                'todo_status': 'TODO'
+                'todo_status': TodoStatus.TODO.name
             },
             Expected={
                 'primary_key': {

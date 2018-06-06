@@ -4,6 +4,7 @@ import pytest
 import todos.create as create
 
 from botocore.exceptions import ClientError
+from todos.todo_status import TodoStatus
 from todos.utils import create_todos_table, table
 
 TABLE_NAME = os.getenv('TABLE_NAME')
@@ -37,11 +38,20 @@ def event_todo_valid():
 
 
 def test_todo_valid(event_todo_valid):
+    res = table(TABLE_NAME).scan()
+    assert len(res['Items']) == 0
+
     res = create.lambda_handler(event_todo_valid, '')
     assert res['statusCode'] == 200
 
-    res = table(TABLE_NAME).get_item(Key={'id': '1'})
-    assert res['Item']['id'] == '1'
+    res = table(TABLE_NAME).scan()
+    assert len(res['Items']) == 1
+
+    todo = res['Items'][0]
+    assert todo['title'] == 'test title'
+    assert todo['description'] == 'test description'
+    assert todo['due_date'] == '2018-06-30T10:00:00Z'
+    assert todo['todo_status'] == TodoStatus.TODO.name
 
 
 @pytest.fixture()
