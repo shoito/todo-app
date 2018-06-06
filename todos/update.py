@@ -35,8 +35,6 @@ def lambda_handler(event, context):
             }
         )
     except:
-        import traceback
-        traceback.print_exc()
         return respond({'code': 400, 'message': 'Failed to update the todo.'})
 
     return respond(None, res)

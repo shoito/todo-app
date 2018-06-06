@@ -27,19 +27,6 @@ Globals:
         TABLE_NAME: !Ref TodosTable
         DYNAMODB_ENDPOINT: !Ref DynamoDBEndpoint
 Resources:
-  ListFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${Stage}-list-todos
-      CodeUri: ./
-      Handler: todos.list.lambda_handler
-      Policies: AmazonDynamoDBReadOnlyAccess
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /todos
-            Method: GET
   ShowFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -92,6 +79,19 @@ Resources:
           Properties:
             Path: /todos/{id}
             Method: DELETE
+  QueryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${Stage}-query-todos
+      CodeUri: ./
+      Handler: todos.query.lambda_handler
+      Policies: AmazonDynamoDBReadOnlyAccess
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /todos
+            Method: GET
   TodosTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
@@ -103,17 +103,23 @@ Resources:
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
-        - AttributeName: title
-          AttributeType: S
-        - AttributeName: contents
-          AttributeType: S
-        - AttributeName: due_date
-          AttributeType: S
+#        - AttributeName: due_date
+#          AttributeType: S
         - AttributeName: todo_status
           AttributeType: S
       KeySchema:
         - AttributeName: id
           KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: todo_status-index
+          KeySchema:
+            - AttributeName: todo_status
+              KeyType: HASH
+          Projection:
+              ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
 Outputs:
   ApiEndpoint:
     Value: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}
