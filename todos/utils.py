@@ -30,3 +30,47 @@ def respond(err, res=None):
             'Content-Type': 'application/json',
         }
     }
+
+
+def create_todos_table(table_name):
+    return dynamodb().create_table(
+        TableName=table_name,
+        KeySchema=[
+            {
+                'AttributeName': 'id',
+                'KeyType': 'HASH'
+            }
+        ],
+        GlobalSecondaryIndexes=[
+            {
+                'IndexName': 'todo_status-index',
+                'KeySchema': [
+                    {
+                        'AttributeName': 'todo_status',
+                        'KeyType': 'HASH'
+                    }
+                ],
+                'Projection': {
+                    'ProjectionType': 'ALL'
+                },
+                'ProvisionedThroughput': {
+                    'ReadCapacityUnits': 1,
+                    'WriteCapacityUnits': 1
+                }
+            }
+        ],
+        AttributeDefinitions=[
+            {
+                'AttributeName': 'id',
+                'AttributeType': 'S'
+            },
+            {
+                'AttributeName': 'todo_status',
+                'AttributeType': 'S'
+            }
+        ],
+        ProvisionedThroughput={
+            'ReadCapacityUnits': 1,
+            'WriteCapacityUnits': 1
+        }
+    )

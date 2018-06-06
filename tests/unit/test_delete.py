@@ -1,41 +1,22 @@
-import json
 import os
 import pytest
 import todos.delete as delete
 
 from botocore.exceptions import ClientError
-from todos.utils import dynamodb, table
+from todos.utils import create_todos_table, table
 
 TABLE_NAME = os.getenv('TABLE_NAME')
 
 
 def setup():
     try:
-        dynamodb().create_table(
-            TableName=TABLE_NAME,
-            KeySchema=[
-                {
-                    'AttributeName': 'id',
-                    'KeyType': 'HASH'
-                }
-            ],
-            AttributeDefinitions=[
-                {
-                    'AttributeName': 'id',
-                    'AttributeType': 'S'
-                },
-            ],
-            ProvisionedThroughput={
-                'ReadCapacityUnits': 1,
-                'WriteCapacityUnits': 1
-            }
-        )
+        create_todos_table(TABLE_NAME)
 
         table(TABLE_NAME).put_item(
             Item={
                 'id': '1',
                 'title': 'test',
-                'descr': 'test',
+                'description': 'test',
                 'due_date': '2018-06-30T10:00:00Z',
                 'todo_status': 'TODO'
             }
@@ -44,13 +25,14 @@ def setup():
             Item={
                 'id': '2',
                 'title': 'test',
-                'descr': 'test',
+                'description': 'test',
                 'due_date': '2018-07-30T10:00:00Z',
                 'todo_status': 'DOING'
             }
         )
     except ClientError:
-        pass
+        import traceback
+        traceback.print_exc()
 
 
 def teardown():
