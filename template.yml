@@ -40,6 +40,7 @@ Resources:
           Properties:
             Path: /todos/{id}
             Method: GET
+            Cors: true
   CreateFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -53,6 +54,7 @@ Resources:
           Properties:
             Path: /todos
             Method: POST
+            Cors: true
   UpdateFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -66,6 +68,7 @@ Resources:
           Properties:
             Path: /todos/{id}
             Method: PUT
+            Cors: true
   DeleteFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -79,6 +82,7 @@ Resources:
           Properties:
             Path: /todos/{id}
             Method: DELETE
+            Cors: true
   QueryFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -92,6 +96,7 @@ Resources:
           Properties:
             Path: /todos
             Method: GET
+            Cors: true
   TodosTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
@@ -120,6 +125,41 @@ Resources:
           ProvisionedThroughput:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1
+  TodoApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Stage
+      DefinitionUri: swagger.yml
+  ApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    DependsOn: TodoApi
+    Properties:
+      Name: todo-api-key
+      Enabled: true
+      StageKeys:
+        - RestApiId:
+            Ref: TodoApi
+          StageName: !Ref Stage
+  ApiUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    DependsOn: TodoApi
+    Properties:
+      ApiStages:
+      - ApiId: !Ref TodoApi
+        Stage: !Sub TodoApi${Stage}Stage
+      Throttle:
+        BurstLimit: 100
+        RateLimit: 100
+      UsagePlanName: todo-api-usage-plan
+  ApiUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    DependsOn:
+      - ApiKey
+      - ApiUsagePlan
+    Properties :
+      KeyId: !Ref ApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan
 Outputs:
   ApiEndpoint:
     Value: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}
