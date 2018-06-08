@@ -1,8 +1,8 @@
+import json
 import logging
 import os
 
-from botocore.exceptions import ClientError
-from todos.utils import respond, table
+from todos.utils import table
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -26,10 +26,18 @@ def lambda_handler(event, context):
 
         if not res.get('Attributes'):
             return respond({'code': 404, 'message': 'Todo not found.'})
-    except ClientError as e:
-        message = 'Todo cannot delete.'
-        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
-            message = e.response['Error']['Message']
-        return respond({'code': 400, 'message': message})
+    except Exception as e:
+        logging.error(e)
+        return respond({'code': 400, 'message': 'Failed to delete the todo.'})
 
     return respond(None, res)
+
+
+def respond(err, res=None):
+    return {
+        'statusCode': err['code'] if err else 204,
+        'body': err if err else json.dumps(res),
+        'headers': {
+            'Content-Type': 'application/json',
+        }
+    }

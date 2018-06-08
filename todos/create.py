@@ -4,9 +4,8 @@ import logging
 import os
 import uuid
 
-from botocore.exceptions import ClientError
 from todos.todo_status import TodoStatus
-from todos.utils import respond, table
+from todos.utils import table
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -38,13 +37,21 @@ def lambda_handler(event, context):
                 }
             }
         )
-    except ClientError as e:
-        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
-            return respond({'code': 409, 'message': 'Failed to create the todo.'})
-        else:
-            return respond({'code': 400, 'message': 'Failed to create the todo.'})
+    except Exception as e:
+        logging.error(e)
+        return respond({'code': 400, 'message': 'Failed to create the todo.'})
 
     return respond(None, res)
+
+
+def respond(err, res=None):
+    return {
+        'statusCode': err['code'] if err else 201,
+        'body': err if err else json.dumps(res),
+        'headers': {
+            'Content-Type': 'application/json',
+        }
+    }
 
 
 def validate(req):

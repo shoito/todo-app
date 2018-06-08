@@ -57,7 +57,7 @@ def event_todo_exists():
 
 def test_todo_exists(event_todo_exists):
     ret = delete.lambda_handler(event_todo_exists, '')
-    assert ret['statusCode'] == 200
+    assert ret['statusCode'] == 204
 
 
 @pytest.fixture()

@@ -1,9 +1,10 @@
+import json
 import logging
 import os
 
 from boto3.dynamodb.conditions import Key
 from todos.todo_status import TodoStatus
-from todos.utils import respond, table
+from todos.utils import table
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -29,6 +30,16 @@ def lambda_handler(event, context):
         res = table(TABLE_NAME).scan()
 
     return respond(None, res['Items'])
+
+
+def respond(err, res=None):
+    return {
+        'statusCode': err['code'] if err else 200,
+        'body': err if err else json.dumps(res),
+        'headers': {
+            'Content-Type': 'application/json',
+        }
+    }
 
 
 def validate(event):

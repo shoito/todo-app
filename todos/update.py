@@ -3,7 +3,7 @@ import json
 import logging
 import os
 
-from todos.utils import respond, table
+from todos.utils import table
 from todos.todo_status import TodoStatus
 
 logger = logging.getLogger()
@@ -34,10 +34,21 @@ def lambda_handler(event, context):
                 ':todo_status': req.get('todo_status')
             }
         )
-    except:
+    except Exception as e:
+        logging.error(e)
         return respond({'code': 400, 'message': 'Failed to update the todo.'})
 
     return respond(None, res)
+
+
+def respond(err, res=None):
+    return {
+        'statusCode': err['code'] if err else 204,
+        'body': err if err else json.dumps(res),
+        'headers': {
+            'Content-Type': 'application/json',
+        }
+    }
 
 
 def validate(req):

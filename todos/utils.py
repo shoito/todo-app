@@ -1,5 +1,4 @@
 import boto3
-import json
 import os
 import sys
 
@@ -20,16 +19,6 @@ def dynamodb():
 
 def table(table_name):
     return dynamodb().Table(table_name)
-
-
-def respond(err, res=None):
-    return {
-        'statusCode': err['code'] if err else 200,
-        'body': err if err else json.dumps(res),
-        'headers': {
-            'Content-Type': 'application/json',
-        }
-    }
 
 
 def create_todos_table(table_name):
