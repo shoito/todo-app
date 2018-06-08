@@ -1,0 +1,185 @@
+swagger: "2.0"
+info:
+  description: |
+    Todoアプリケーション用API。
+    Todoの作成、変更、削除、検索の機能を提供する。
+  version: "0.0.1"
+  title: "Todo App API"
+  license:
+    name: "MIT License"
+    url: "https://opensource.org/licenses/MIT"
+host: "localhost"
+basePath: "/"
+tags:
+- name: "todos"
+  description: "Todo App"
+schemes:
+- "https"
+paths:
+  /todos:
+    post:
+      tags:
+      - "todos"
+      summary: "Todo登録API"
+      description: "Todo情報を登録します"
+      operationId: "createTodos"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "登録するTodo情報(タイトル、説明など)"
+        required: true
+        schema:
+          $ref: "#/definitions/Todo"
+      responses:
+        201:
+          description: "Todoの作成に成功"
+        400:
+          description: "不正なリクエストによりTodoの作成に失敗"
+        401:
+          description: "認証が必要"
+      security:
+      - apiKey: []
+    get:
+      tags:
+      - "todos"
+      summary: "Todo検索API"
+      description: "クエリ指定された条件に合うTodo情報を返します"
+      operationId: "queryTodos"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "todo_status"
+        description: "検索対象のステータス"
+        required: false
+        type: "string"
+        enum:
+        - TODO
+        - DOING
+        - DONE
+      responses:
+        200:
+          description: "Todoの検索に成功"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Todo"
+        400:
+          description: "不正なリクエストによりTodoの検索に失敗"
+        401:
+          description: "認証が必要"
+      security:
+      - apiKey: []
+  /todos/{id}:
+    get:
+      tags:
+      - "todos"
+      summary: "Todo取得API"
+      description: "指定されたIDのTodo情報を返します"
+      operationId: "showTodos"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "取得対象のTodo ID"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "取得するTodo情報(タイトル、説明など)"
+        required: true
+        schema:
+          $ref: "#/definitions/Todo"
+      responses:
+        200:
+          description: "Todoの取得に成功"
+        401:
+          description: "認証が必要"
+        404:
+          description: "取得対象のTodo情報が存在しない"
+      security:
+      - apiKey: []
+    put:
+      tags:
+      - "todos"
+      summary: "Todo更新API"
+      description: "指定されたIDのTodo情報を更新します"
+      operationId: "updateTodos"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "更新対象のTodo ID"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "更新するTodo情報(タイトル、説明など)"
+        required: true
+        schema:
+          $ref: "#/definitions/Todo"
+      responses:
+        204:
+          description: "Todoの更新に成功"
+        400:
+          description: "不正なリクエストによりTodoの更新に失敗"
+        401:
+          description: "認証が必要"
+        404:
+          description: "削除対象のTodo情報が存在しない"
+      security:
+      - apiKey: []
+    delete:
+      tags:
+      - "todos"
+      summary: "Todo削除API"
+      description: "指定されたIDのTodo情報を削除します"
+      operationId: "deleteTodos"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "削除対象のTodo ID"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "Todoの削除に成功"
+        401:
+          description: "認証が必要"
+        404:
+          description: "削除対象のTodo情報が存在しない"
+      security:
+      - apiKey: []
+securityDefinitions:
+  apiKey:
+    type: "apiKey"
+    name: "x-api-key"
+    in: "header"
+definitions:
+  Todo:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      due_date:
+        type: "string"
+      todo_status:
+        type: "string"
