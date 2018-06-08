@@ -42,7 +42,7 @@ def test_todo_valid(event_todo_valid):
     assert len(res['Items']) == 0
 
     res = create.lambda_handler(event_todo_valid, '')
-    assert res['statusCode'] == 200
+    assert res['statusCode'] == 201
 
     res = table(TABLE_NAME).scan()
     assert len(res['Items']) == 1

@@ -52,7 +52,7 @@ def event_todo_valid():
 
 def test_todo_valid(event_todo_valid):
     res = update.lambda_handler(event_todo_valid, '')
-    assert res['statusCode'] == 200
+    assert res['statusCode'] == 204
 
     res = table(TABLE_NAME).get_item(Key={'id': '1'})
     todo = res['Item']
