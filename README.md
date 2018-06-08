@@ -130,3 +130,12 @@ Responses
 | description | string | No | Todoの詳細説明 |
 | due_date | string | No | 期日 |
 | todo_status | string | No | ステータス(TODO, DOING, DONE) |
+
+
+# 開発
+## ユニットテスト実行
+
+```bash
+docker-compose up -d
+TABLE_NAME=ut_todos DEFAULT_REGION=ap-northeast-1 DYNAMODB_ENDPOINT=http://localhost:4569 python -m pytest tests/ -v
+```
