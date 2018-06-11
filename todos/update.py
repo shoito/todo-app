@@ -20,7 +20,7 @@ def lambda_handler(event, context):
         req = json.loads(event['body'])
 
         if not validate(req):
-            return respond({'code': 400, 'message': 'Failed to update the todo.'})
+            return respond({'code': 400, 'message': 'Bad request. Failed to update the todo.'})
 
         res = table(TABLE_NAME).update_item(
             Key={
@@ -44,10 +44,9 @@ def lambda_handler(event, context):
 def respond(err, res=None):
     return {
         'statusCode': err['code'] if err else 204,
-        'body': err if err else json.dumps(res),
-        'headers': {
-            'Content-Type': 'application/json',
-        }
+        'body': json.dumps(err) if err else '',
+        'headers': {},
+        'isBase64Encoded': 'false'
     }
 
 
@@ -61,7 +60,8 @@ def validate(req):
     if req.get('due_date'):
         try:
             dateutil.parser.parse(req.get('due_date'))
-        except ValueError:
+        except ValueError as e:
+            logging.error(e)
             return False
     if (not req.get('todo_status')
            in [TodoStatus.TODO.name, TodoStatus.DOING.name, TodoStatus.DONE.name]):

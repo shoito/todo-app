@@ -36,8 +36,7 @@ def lambda_handler(event, context):
 def respond(err, res=None):
     return {
         'statusCode': err['code'] if err else 204,
-        'body': err if err else json.dumps(res),
-        'headers': {
-            'Content-Type': 'application/json',
-        }
+        'body': json.dumps(err) if err else '',
+        'headers': {},
+        'isBase64Encoded': 'false'
     }

@@ -8,13 +8,13 @@ info:
   license:
     name: "MIT License"
     url: "https://opensource.org/licenses/MIT"
-host: "localhost"
+host: execute-api.ap-northeast-1.amazonaws.com
 basePath: "/"
 tags:
-- name: "todos"
-  description: "Todo App"
+  - name: "todos"
+    description: "Todo App"
 schemes:
-- "https"
+  - "https"
 paths:
   /todos:
     post:
@@ -29,7 +29,7 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "body"
+        name: "Todo"
         description: "登録するTodo情報(タイトル、説明など)"
         required: true
         schema:
@@ -37,12 +37,18 @@ paths:
       responses:
         201:
           description: "Todoの作成に成功"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Todo'
         400:
           description: "不正なリクエストによりTodoの作成に失敗"
-        401:
-          description: "認証が必要"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
       security:
-      - apiKey: []
+      - TodoApiKey: []
     get:
       tags:
       - "todos"
@@ -66,16 +72,45 @@ paths:
       responses:
         200:
           description: "Todoの検索に成功"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
           schema:
             type: array
             items:
               $ref: "#/definitions/Todo"
         400:
           description: "不正なリクエストによりTodoの検索に失敗"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "認証が必要"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
       security:
-      - apiKey: []
+      - TodoApiKey: []
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - CORS
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Headers:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Origin:
+              type: "string"
   /todos/{id}:
     get:
       tags:
@@ -102,12 +137,23 @@ paths:
       responses:
         200:
           description: "Todoの取得に成功"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: "#/definitions/Todo"
         401:
           description: "認証が必要"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "取得対象のTodo情報が存在しない"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
       security:
-      - apiKey: []
+      - TodoApiKey: []
     put:
       tags:
       - "todos"
@@ -133,14 +179,28 @@ paths:
       responses:
         204:
           description: "Todoの更新に成功"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: "#/definitions/Empty"
         400:
           description: "不正なリクエストによりTodoの更新に失敗"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "認証が必要"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "削除対象のTodo情報が存在しない"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
       security:
-      - apiKey: []
+      - TodoApiKey: []
     delete:
       tags:
       - "todos"
@@ -158,14 +218,47 @@ paths:
       responses:
         204:
           description: "Todoの削除に成功"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: "#/definitions/Empty"
         401:
           description: "認証が必要"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "削除対象のTodo情報が存在しない"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
       security:
-      - apiKey: []
+      - TodoApiKey: []
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - CORS
+      responses:
+        200:
+          description: Default response for CORS method
+          schema:
+            $ref: "#/definitions/Empty"
+          headers:
+            Access-Control-Allow-Headers:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Origin:
+              type: "string"
 securityDefinitions:
-  apiKey:
+  TodoApiKey:
     type: "apiKey"
     name: "x-api-key"
     in: "header"
@@ -183,3 +276,5 @@ definitions:
         type: "string"
       todo_status:
         type: "string"
+  Empty:
+    type: "object"
