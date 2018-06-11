@@ -21,16 +21,18 @@ def lambda_handler(event, context):
         req = json.loads(event['body'])
 
         if not validate(req):
-            return respond({'code': 400, 'message': 'Failed to create the todo.'})
+            return respond({'code': 400, 'message': 'Bad request. Failed to create the todo.'})
 
-        res = table(TABLE_NAME).put_item(
-            Item={
-                'id': str(uuid.uuid4().hex[:8]),
-                'title': req.get('title'),
-                'description': req.get('description', ''),
-                'due_date': req.get('due_date', ''),
-                'todo_status': TodoStatus.TODO.name
-            },
+        todo = {
+            'id': str(uuid.uuid4().hex[:8]),
+            'title': req.get('title'),
+            'description': req.get('description', ''),
+            'due_date': req.get('due_date', ''),
+            'todo_status': TodoStatus.TODO.name
+        }
+
+        table(TABLE_NAME).put_item(
+            Item=todo,
             Expected={
                 'primary_key': {
                     'Exists': False
@@ -41,16 +43,15 @@ def lambda_handler(event, context):
         logging.error(e)
         return respond({'code': 400, 'message': 'Failed to create the todo.'})
 
-    return respond(None, res)
+    return respond(None, todo)
 
 
 def respond(err, res=None):
     return {
         'statusCode': err['code'] if err else 201,
-        'body': err if err else json.dumps(res),
-        'headers': {
-            'Content-Type': 'application/json',
-        }
+        'body': json.dumps(err) if err else json.dumps(res),
+        'headers': {},
+        'isBase64Encoded': 'false'
     }
 
 

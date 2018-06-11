@@ -32,7 +32,6 @@ Responses
 | ---- | ----------- |
 | 201 | Todoの作成に成功 |
 | 400 | 不正なリクエストによりTodoの作成に失敗 |
-| 401 | 認証が必要 |
 
 
 ### Method: GET
@@ -52,7 +51,6 @@ Responses
 | ---- | ----------- | ------ |
 | 200 | Todoの検索に成功 | [ [Todo](#todo) ] |
 | 400 | 不正なリクエストによりTodoの検索に失敗 |
-| 401 | 認証が必要 |
 
 
 ## /todos/{id}
@@ -73,7 +71,6 @@ Responses
 | Code | Description |
 | ---- | ----------- |
 | 200 | Todoの取得に成功 |
-| 401 | 認証が必要 |
 | 404 | 取得対象のTodo情報が存在しない |
 
 
@@ -95,7 +92,6 @@ Responses
 | ---- | ----------- |
 | 204 | Todoの更新に成功 |
 | 400 | 不正なリクエストによりTodoの更新に失敗 |
-| 401 | 認証が必要 |
 | 404 | 削除対象のTodo情報が存在しない |
 
 
@@ -115,7 +111,6 @@ Responses
 | Code | Description |
 | ---- | ----------- |
 | 204 | Todoの削除に成功 |
-| 401 | 認証が必要 |
 | 404 | 削除対象のTodo情報が存在しない |
 
 
@@ -138,4 +133,85 @@ Responses
 ```bash
 docker-compose up -d
 TABLE_NAME=ut_todos DEFAULT_REGION=ap-northeast-1 DYNAMODB_ENDPOINT=http://localhost:4569 python -m pytest tests/ -v
+```
+
+## サンプル実行
+### 変数設定
+
+```bash
+AGID=
+API_KEY=
+STAGE=
+```
+
+### 登録
+
+```bash
+curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos \
+    -d '{"title": "t1", "description": "d1", "due_date": "2018-06-12T15:00:00Z"}'
+    -H "x-api-key:$API_KEY" \
+    -XPOST -v
+```
+
+```bash
+curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos \
+    -d '{"title": "t2", "description": "d2", "due_date": "2018-06-15T15:00:00Z"}'
+    -H "x-api-key:$API_KEY" \
+    -XPOST -v
+```
+
+```bash
+curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos \
+    -d '{"title": "t3", "description": "d3", "due_date": "2018-06-21T15:00:00Z"}'
+    -H "x-api-key:$API_KEY" \
+    -XPOST -v
+```
+
+### 全件取得
+
+```bash
+curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos \
+    -H "x-api-key:$API_KEY" \
+    -XGET -v
+```
+
+### 1件取得
+
+```bash
+curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_ID \
+    -H "x-api-key:$API_KEY" \
+    -XGET -v
+```
+
+### 更新
+
+```bash
+curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_ID \
+    -d '{"title": "tx", "description": "dx", "due_date": "2018-06-21T15:00:00Z", "todo_status": "DOING"}'
+    -H "x-api-key:$API_KEY" \
+    -XPUT -v
+```
+
+### 1件取得
+
+```bash
+curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_ID \
+    -H "x-api-key:$API_KEY" \
+    -XGET -v
+```
+
+### 絞り込み取得
+
+```bash
+curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos?todo_status=DOING \
+    -H "x-api-key:$API_KEY" \
+    -XGET -v
+```
+
+### 削除
+
+```bash
+curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_ID \
+    -H "x-api-key:$API_KEY" \
+    -XDELETE -v
 ```
