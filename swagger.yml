@@ -8,7 +8,7 @@ info:
   license:
     name: "MIT License"
     url: "https://opensource.org/licenses/MIT"
-host: execute-api.ap-northeast-1.amazonaws.com
+host: localhost
 basePath: "/"
 tags:
   - name: "todos"
