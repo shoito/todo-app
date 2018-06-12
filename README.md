@@ -141,30 +141,29 @@ TABLE_NAME=ut_todos DEFAULT_REGION=ap-northeast-1 DYNAMODB_ENDPOINT=http://local
 ### 変数設定
 
 ```bash
-AGID=
+BASE_URL=
 API_KEY=
-STAGE=
 ```
 
 ### 登録
 
 ```bash
-curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos \
-    -d '{"title": "t1", "description": "d1", "due_date": "2018-06-12T15:00:00Z"}'
+curl $BASE_URL/todos \
+    -d '{"title": "t1", "description": "d1", "due_date": "2018-06-12T15:00:00Z"}' \
     -H "x-api-key:$API_KEY" \
     -XPOST -v
 ```
 
 ```bash
-curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos \
-    -d '{"title": "t2", "description": "d2", "due_date": "2018-06-15T15:00:00Z"}'
+curl $BASE_URL/todos \
+    -d '{"title": "t2", "description": "d2", "due_date": "2018-06-15T15:00:00Z"}' \
     -H "x-api-key:$API_KEY" \
     -XPOST -v
 ```
 
 ```bash
-curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos \
-    -d '{"title": "t3", "description": "d3", "due_date": "2018-06-21T15:00:00Z"}'
+curl $BASE_URL/todos \
+    -d '{"title": "t3", "description": "d3", "due_date": "2018-06-21T15:00:00Z"}' \
     -H "x-api-key:$API_KEY" \
     -XPOST -v
 ```
@@ -172,7 +171,7 @@ curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos \
 ### 全件取得
 
 ```bash
-curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos \
+curl $BASE_URL/todos \
     -H "x-api-key:$API_KEY" \
     -XGET -v
 ```
@@ -180,7 +179,7 @@ curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos \
 ### 1件取得
 
 ```bash
-curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_ID \
+curl $BASE_URL/todos/$TODO_ID \
     -H "x-api-key:$API_KEY" \
     -XGET -v
 ```
@@ -188,8 +187,8 @@ curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_I
 ### 更新
 
 ```bash
-curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_ID \
-    -d '{"title": "tx", "description": "dx", "due_date": "2018-06-21T15:00:00Z", "todo_status": "DOING"}'
+curl $BASE_URL/todos/$TODO_ID \
+    -d '{"title": "tx", "description": "dx", "due_date": "2018-06-21T15:00:00Z", "todo_status": "DOING"}' \
     -H "x-api-key:$API_KEY" \
     -XPUT -v
 ```
@@ -197,7 +196,7 @@ curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_I
 ### 1件取得
 
 ```bash
-curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_ID \
+curl $BASE_URL/todos/$TODO_ID \
     -H "x-api-key:$API_KEY" \
     -XGET -v
 ```
@@ -205,7 +204,7 @@ curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_I
 ### 絞り込み取得
 
 ```bash
-curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos?todo_status=DOING \
+curl "$BASE_URL/todos?todo_status=DOING" \
     -H "x-api-key:$API_KEY" \
     -XGET -v
 ```
@@ -213,7 +212,7 @@ curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos?todo_st
 ### 削除
 
 ```bash
-curl https://$AGID.execute-api.ap-northeast-1.amazonaws.com/$STAGE/todos/$TODO_ID \
+curl $BASE_URL/todos/$TODO_ID \
     -H "x-api-key:$API_KEY" \
     -XDELETE -v
 ```

@@ -9,7 +9,7 @@
 ## S3バケット作成
 
 ```bash
-aws s3 mb s3://todoCm20180612 --region ap-northeast-1
+aws s3 mb s3://shoito20180612 --region ap-northeast-1
 ```
 
 
@@ -18,7 +18,7 @@ aws s3 mb s3://todoCm20180612 --region ap-northeast-1
 ```bash
 aws cloudformation package \
     --template-file template.yml \
-    --s3-bucket todoCm20180612 \
+    --s3-bucket shoito20180612 \
     --region ap-northeast-1 \
     --output-template-file packaged-template.yml
 ```
