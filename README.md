@@ -5,6 +5,8 @@ Todoアプリケーション用API。
 
 Todoの作成、変更、削除、検索の機能を提供する。
 
+![Todoアプリケーションアーキテクチャ](images/todo_app_arc.png "Todoアプリケーションアーキテクチャ")
+
 
 ## 認証
 ### apiKey

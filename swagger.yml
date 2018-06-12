@@ -14,6 +14,7 @@ tags:
   - name: "todos"
     description: "Todo App"
 schemes:
+  - "http"
   - "https"
 paths:
   /todos:
@@ -84,11 +85,6 @@ paths:
           headers:
             Access-Control-Allow-Origin:
               type: "string"
-        401:
-          description: "認証が必要"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
       security:
       - TodoApiKey: []
     options:
@@ -142,11 +138,6 @@ paths:
               type: "string"
           schema:
             $ref: "#/definitions/Todo"
-        401:
-          description: "認証が必要"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
         404:
           description: "取得対象のTodo情報が存在しない"
           headers:
@@ -189,11 +180,6 @@ paths:
           headers:
             Access-Control-Allow-Origin:
               type: "string"
-        401:
-          description: "認証が必要"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
         404:
           description: "削除対象のTodo情報が存在しない"
           headers:
@@ -223,11 +209,6 @@ paths:
               type: "string"
           schema:
             $ref: "#/definitions/Empty"
-        401:
-          description: "認証が必要"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
         404:
           description: "削除対象のTodo情報が存在しない"
           headers:
