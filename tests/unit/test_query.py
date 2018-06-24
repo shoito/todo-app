@@ -67,7 +67,9 @@ def teardown():
 @pytest.fixture()
 def event_todo_TODO():
     return {
-        'todo_status': 'TODO',
+        'queryStringParameters': {
+            'todo_status': 'TODO'
+        },
         'httpMethod': 'POST'
     }
 
@@ -83,7 +85,9 @@ def test_todo_TODO(event_todo_TODO):
 @pytest.fixture()
 def event_todo_DOING():
     return {
-        'todo_status': 'DOING',
+        'queryStringParameters': {
+            'todo_status': 'DOING'
+        },
         'httpMethod': 'POST'
     }
 
@@ -99,7 +103,9 @@ def test_todo_DOING(event_todo_DOING):
 @pytest.fixture()
 def event_todo_DONE():
     return {
-        'todo_status': 'DONE',
+        'queryStringParameters': {
+            'todo_status': 'DONE'
+        },
         'httpMethod': 'POST'
     }
 
@@ -115,7 +121,9 @@ def test_todo_DONE(event_todo_DONE):
 @pytest.fixture()
 def event_todo_invalid_status():
     return {
-        'todo_status': 'HOGE',
+        'queryStringParameters': {
+            'todo_status': 'HOGE'
+        },
         'httpMethod': 'POST'
     }
 

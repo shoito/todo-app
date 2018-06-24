@@ -136,7 +136,9 @@ Resources:
               Action:
                 - dynamodb:Query
                 - dynamodb:Scan
-              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${TodosTable}
+              Resource:
+                - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${TodosTable}
+                - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${TodosTable}/index/todo_status-index
   TodosTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
