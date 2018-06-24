@@ -19,7 +19,8 @@ def lambda_handler(event, context):
     if not validate(event):
         return respond({'code': 400, 'message': 'Bad request parameter.'})
 
-    todo_status = event.get('todo_status')
+    params = event.get('queryStringParameters') or {}
+    todo_status = params.get('todo_status')
 
     if todo_status:
         res = table(TABLE_NAME).query(
